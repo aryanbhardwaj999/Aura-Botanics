@@ -952,7 +952,215 @@ function initBlog() {
 // Run everything on load
 document.addEventListener('DOMContentLoaded', initPage);
 
-// Expose functions to window for global access
+// ─── Master Page Initialization ────────────────────────────────
+function initPage() {
+  const path = window.location.pathname;
+  const isHome = path === '/' || path.endsWith('index.html');
+  const isShop = path.includes('shop.html');
+  const isProduct = path.includes('product.html');
+  const isBlog = path.includes('blog.html');
+  const isAuth = path.includes('auth.html');
+  const isAccount = path.includes('account.html');
+  const isCart = path.includes('cart.html');
+  const isWishlist = path.includes('wishlist.html');
+  const isSupport = path.includes('support.html');
+  const isEvents = path.includes('events.html');
+
+  console.log("Aura Botanics Init: ", { path, isHome, isShop });
+
+  // 1. Render Shared UI
+  const navContainer = document.getElementById('site-nav');
+  const footerContainer = document.getElementById('site-footer');
+  
+  if (navContainer) {
+    const active = isHome ? 'home' : isShop ? 'shop' : isBlog ? 'blog' : isAuth ? 'auth' : isWishlist ? 'wishlist' : '';
+    navContainer.innerHTML = renderNav(active);
+    initMobileNav();
+    Cart.updateUI(); // Refresh counts
+  }
+  
+  if (footerContainer) {
+    footerContainer.innerHTML = renderFooter();
+  }
+
+  // 2. Initialize Page-Specific Logic
+  if (isShop) initShop();
+  if (isProduct) initProduct();
+  if (isBlog) initBlog();
+  if (isAuth) initAuth();
+  if (isAccount) initAccount();
+  if (isCart) initCart();
+  if (isWishlist) initWishlist();
+  if (isSupport) initSupport();
+  
+  // 3. Scroll reveal
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.animate-in').forEach(el => obs.observe(el));
+}
+
+function initShop() {
+  const container = document.getElementById('product-grid');
+  if (!container) return;
+  
+  const filterTabs = document.getElementById('filter-tabs');
+  const sortSelect = document.getElementById('sort-select');
+  const countDisplay = document.getElementById('results-count');
+
+  let currentCat = 'all';
+  let currentSort = 'featured';
+
+  const render = () => {
+    let filtered = currentCat === 'all' ? [...PRODUCTS] : PRODUCTS.filter(p => p.category === currentCat);
+    
+    switch (currentSort) {
+      case 'price-low': filtered.sort((a, b) => a.price - b.price); break;
+      case 'price-high': filtered.sort((a, b) => b.price - a.price); break;
+      case 'rating': filtered.sort((a, b) => b.rating - a.rating); break;
+      case 'reviews': filtered.sort((a, b) => b.reviews - a.reviews); break;
+    }
+
+    if (countDisplay) countDisplay.textContent = `${filtered.length} product${filtered.length !== 1 ? 's' : ''}`;
+    container.innerHTML = filtered.map(p => renderProductCard(p)).join('');
+    
+    // Cards should be visible
+    document.querySelectorAll('.product-card').forEach(c => {
+      c.style.opacity = '1';
+      c.style.transform = 'none';
+    });
+  };
+
+  if (filterTabs) {
+    filterTabs.addEventListener('click', e => {
+      const tab = e.target.closest('.filter-tab');
+      if (!tab) return;
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentCat = tab.dataset.cat;
+      render();
+    });
+  }
+
+  if (sortSelect) {
+    sortSelect.addEventListener('change', e => {
+      currentSort = e.target.value;
+      render();
+    });
+  }
+
+  render();
+}
+
+function initProduct() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  const p = getProductById(id) || PRODUCTS[0];
+  
+  const container = document.getElementById('product-detail-container');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="product-detail-grid">
+      <div class="product-detail-visual animate-in">
+        <img src="${p.image}" alt="${p.name}" class="main-img" />
+      </div>
+      <div class="product-detail-info animate-in">
+        <p class="eyebrow">${p.category}</p>
+        <h1 style="font-family:var(--ff-heading); font-size:clamp(32px,4vw,48px); margin:8px 0;">${p.name}</h1>
+        <div class="rating-row" style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
+          <span style="color:var(--gold);">${renderStars(p.rating)}</span>
+          <span style="color:#666; font-size:14px;">(${p.reviews} reviews)</span>
+        </div>
+        <div class="price-row" style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
+          <span class="current" style="font-size:28px; font-weight:700; color:var(--charcoal);">$${p.price}</span>
+          <span class="old" style="text-decoration:line-through; color:#999; font-size:18px;">$${p.originalPrice}</span>
+        </div>
+        <p class="desc" style="font-size:16px; line-height:1.6; color:#444; margin-bottom:32px;">${p.description}</p>
+        <div class="purchase-actions" style="display:flex; gap:16px; margin-bottom:40px;">
+          <button class="btn-primary" onclick="Cart.add('${p.id}')" style="flex:2;">Add to Cart</button>
+          <button class="btn-outline" onclick="Wishlist.toggle('${p.id}')" style="flex:1;">Favorite</button>
+        </div>
+        <div class="product-features-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:16px; padding-top:24px; border-top:1px solid var(--border-light);">
+          <div class="feat-item"><strong>🌿 Natural</strong><p>100% Organic Extracts</p></div>
+          <div class="feat-item"><strong>🐰 Cruelty-Free</strong><p>Never tested on animals</p></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function initBlog() {
+  const container = document.getElementById('blog-grid');
+  if (!container) return;
+
+  const render = (cat = 'All Articles') => {
+    let filtered = cat === 'All Articles' ? BLOGS : BLOGS.filter(b => b.category === cat || b.category + 's' === cat);
+    container.innerHTML = filtered.map(b => `
+      <article class="blog-card">
+        <a href="article.html?id=${b.id}" class="blog-card-img">
+          <img src="${b.image}" alt="${b.title}" loading="lazy" />
+          <span class="blog-badge">${b.category}</span>
+        </a>
+        <div class="blog-card-body">
+          <span class="blog-date">${b.date}</span>
+          <h3 class="blog-title"><a href="article.html?id=${b.id}">${b.title}</a></h3>
+          <p class="blog-excerpt">${b.excerpt}</p>
+          <a href="article.html?id=${b.id}" class="blog-read-more">Read Article →</a>
+        </div>
+      </article>
+    `).join('');
+  };
+
+  document.querySelectorAll('.filter-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      render(tab.textContent);
+    });
+  });
+
+  render();
+}
+
+function initAuth() {
+  if (Auth.isLoggedIn()) { window.location.href = 'account.html'; return; }
+  const loginForm = document.getElementById('login-form');
+  const signupForm = document.getElementById('signup-form');
+  if (!loginForm || !signupForm) return;
+
+  window.showTab = function(tab) {
+    if (tab === 'login') {
+      loginForm.style.display = 'block';
+      signupForm.style.display = 'none';
+      document.getElementById('tab-login').classList.add('active');
+      document.getElementById('tab-signup').classList.remove('active');
+    } else {
+      loginForm.style.display = 'none';
+      signupForm.style.display = 'block';
+      document.getElementById('tab-signup').classList.add('active');
+      document.getElementById('tab-login').classList.remove('active');
+    }
+  };
+}
+
+function initSupport() {
+  // Support page logic (FAQ toggles, etc.)
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.addEventListener('click', () => {
+      item.classList.toggle('active');
+    });
+  });
+}
+
+// Global Execution
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPage);
+} else {
+  initPage();
+}
+
+// Expose to window
 window.renderNav = renderNav;
 window.renderFooter = renderFooter;
 window.initMobileNav = initMobileNav;
@@ -962,4 +1170,5 @@ window.Auth = Auth;
 window.Orders = Orders;
 window.PRODUCTS = PRODUCTS;
 window.BLOGS = BLOGS;
+window.initPage = initPage;
 window.initPage = initPage;

@@ -134,44 +134,6 @@
 
   <script type="module" src="app.js"></script>
 
-  <script>
-    document.getElementById('site-nav').innerHTML = renderNav('auth');
-    document.getElementById('site-footer').innerHTML = renderFooter();
-    initMobileNav();
-
-    // If already logged in, redirect
-    if (Auth.isLoggedIn()) {
-      window.location.href = 'account.html';
-    }
-
-    // Tab switching
-    const loginForm = document.getElementById('login-form');
-    const signupForm = document.getElementById('signup-form');
-    const tabLogin = document.getElementById('tab-login');
-    const tabSignup = document.getElementById('tab-signup');
-    const switchText = document.getElementById('auth-switch-text');
-
-    function showTab(tab) {
-      if (tab === 'login') {
-        loginForm.style.display = 'block';
-        signupForm.style.display = 'none';
-        tabLogin.classList.add('active');
-        tabSignup.classList.remove('active');
-        switchText.innerHTML = 'Don\'t have an account? <a href="#" id="switch-to-signup">Create one</a>';
-        document.getElementById('switch-to-signup').addEventListener('click', e => { e.preventDefault(); showTab('signup'); });
-      } else {
-        loginForm.style.display = 'none';
-        signupForm.style.display = 'block';
-        tabSignup.classList.add('active');
-        tabLogin.classList.remove('active');
-        switchText.innerHTML = 'Already have an account? <a href="#" id="switch-to-login">Sign in</a>';
-        document.getElementById('switch-to-login').addEventListener('click', e => { e.preventDefault(); showTab('login'); });
-      }
-    }
-
-    tabLogin.addEventListener('click', () => showTab('login'));
-    tabSignup.addEventListener('click', () => showTab('signup'));
-    document.getElementById('switch-to-signup')?.addEventListener('click', e => { e.preventDefault(); showTab('signup'); });
 
     // URL param check
     if (new URLSearchParams(window.location.search).get('tab') === 'signup') showTab('signup');

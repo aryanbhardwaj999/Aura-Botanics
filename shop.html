@@ -80,59 +80,5 @@
   <div id="site-footer"></div>
 
   <script type="module" src="app.js"></script>
-
-  <script>
-    // Render shared components
-    document.getElementById('site-nav').innerHTML = renderNav('shop');
-    document.getElementById('site-footer').innerHTML = renderFooter();
-    initMobileNav();
-
-    // State
-    let currentCat = 'all';
-    let currentSort = 'featured';
-
-    function filterAndRender() {
-      let filtered = currentCat === 'all' ? [...PRODUCTS] : PRODUCTS.filter(p => p.category === currentCat);
-
-      switch (currentSort) {
-        case 'price-low': filtered.sort((a, b) => a.price - b.price); break;
-        case 'price-high': filtered.sort((a, b) => b.price - a.price); break;
-        case 'rating': filtered.sort((a, b) => b.rating - a.rating); break;
-        case 'reviews': filtered.sort((a, b) => b.reviews - a.reviews); break;
-      }
-
-      document.getElementById('results-count').textContent = `${filtered.length} product${filtered.length !== 1 ? 's' : ''}`;
-      document.getElementById('product-grid').innerHTML = filtered.map(renderProductCard).join('');
-    }
-
-    // Filter tabs
-    document.getElementById('filter-tabs').addEventListener('click', e => {
-      const tab = e.target.closest('.filter-tab');
-      if (!tab) return;
-      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      currentCat = tab.dataset.cat;
-      filterAndRender();
-    });
-
-    // Sort
-    document.getElementById('sort-select').addEventListener('change', e => {
-      currentSort = e.target.value;
-      filterAndRender();
-    });
-
-    // Newsletter
-    document.getElementById('newsletter-form').addEventListener('submit', e => {
-      e.preventDefault();
-      const input = e.target.querySelector('input');
-      input.value = '';
-      const btn = e.target.querySelector('button');
-      btn.textContent = '✓ Subscribed!';
-      btn.style.background = '#22c55e';
-      setTimeout(() => { btn.textContent = 'Subscribe'; btn.style.background = ''; }, 3000);
-    });
-
-    filterAndRender();
-  </script>
 </body>
 </html>
