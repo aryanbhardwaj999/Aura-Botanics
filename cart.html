@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Cart — Aura Botanics</title>
+  <meta name="description" content="Review your cart and proceed to checkout." />
+  <meta name="theme-color" content="#FDFCF8" />
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link rel="stylesheet" href="index.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>" />
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <main id="main-content">
+    <section class="cart-page">
+      <div class="container">
+        <h1 class="section-title" style="margin-bottom:40px">Your Cart</h1>
+
+        <!-- Empty State -->
+        <div class="cart-empty" id="cart-empty" style="display:none">
+          <div class="empty-icon">🛒</div>
+          <h2>Your cart is empty</h2>
+          <p>Looks like you haven't added any products yet. Explore our collection and find your perfect skincare routine.</p>
+          <a href="shop.html" class="btn-primary" style="width:auto;display:inline-flex">Browse Products →</a>
+        </div>
+
+        <!-- Cart Content -->
+        <div class="cart-content" id="cart-content" style="display:none">
+          <div class="cart-grid">
+            <!-- Items -->
+            <div class="cart-items" id="cart-items"></div>
+
+            <!-- Summary -->
+            <div class="cart-summary">
+              <div class="summary-card">
+                <h3>Order Summary</h3>
+                <div class="summary-row">
+                  <span>Subtotal</span>
+                  <span id="summary-subtotal">$0</span>
+                </div>
+                <div class="summary-row">
+                  <span>Shipping</span>
+                  <span id="summary-shipping" class="free-ship">FREE</span>
+                </div>
+                <div class="summary-row">
+                  <span>Estimated Tax</span>
+                  <span id="summary-tax">$0</span>
+                </div>
+                <div class="summary-divider"></div>
+                <div class="summary-row summary-total">
+                  <span>Total</span>
+                  <span id="summary-total">$0</span>
+                </div>
+
+                <div class="promo-input-row">
+                  <input type="text" placeholder="Promo code" id="promo-input" aria-label="Promo code" />
+                  <button id="promo-btn">Apply</button>
+                </div>
+
+                <button class="btn-primary checkout-btn" id="checkout-btn">
+                  Proceed to Checkout <span class="arrow">→</span>
+                </button>
+
+                <div class="summary-trust">
+                  <span>🔒 Secure 256-bit SSL</span>
+                  <span>🚚 Free Shipping $75+</span>
+                  <span>🔄 60-Day Returns</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="app.js"></script>
+  <script>
+    document.getElementById('site-nav').innerHTML = renderNav('cart');
+    document.getElementById('site-footer').innerHTML = renderFooter();
+    initMobileNav();
+
+    function renderCart() {
+      const items = Cart.get();
+      const emptyEl = document.getElementById('cart-empty');
+      const contentEl = document.getElementById('cart-content');
+
+      if (items.length === 0) {
+        emptyEl.style.display = 'block';
+        contentEl.style.display = 'none';
+        return;
+      }
+
+      emptyEl.style.display = 'none';
+      contentEl.style.display = 'block';
+
+      const itemsHtml = items.map(item => {
+        const p = getProductById(item.id);
+        if (!p) return '';
+        const lineTotal = p.price * item.qty;
+        return `
+          <div class="cart-item" id="cart-item-${p.id}">
+            <a href="product.html?id=${p.id}" class="cart-item-img">
+              <img src="${p.image}" alt="${p.name}" />
+            </a>
+            <div class="cart-item-details">
+              <a href="product.html?id=${p.id}" class="cart-item-name">${p.name}</a>
+              <span class="cart-item-cat">${p.category}</span>
+              <div class="cart-item-price-mobile">$${p.price}</div>
+            </div>
+            <div class="cart-item-qty">
+              <button onclick="updateCartQty('${p.id}', ${item.qty - 1})" aria-label="Decrease">−</button>
+              <span>${item.qty}</span>
+              <button onclick="updateCartQty('${p.id}', ${item.qty + 1})" aria-label="Increase">+</button>
+            </div>
+            <div class="cart-item-price">$${lineTotal.toFixed(2)}</div>
+            <button class="cart-item-remove" onclick="removeCartItem('${p.id}')" aria-label="Remove item">✕</button>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('cart-items').innerHTML = itemsHtml;
+
+      // Summary
+      const subtotal = Cart.total();
+      const shipping = subtotal >= 75 ? 0 : 8;
+      const tax = Math.round(subtotal * 0.08 * 100) / 100;
+      const total = subtotal + shipping + tax;
+
+      document.getElementById('summary-subtotal').textContent = `$${subtotal.toFixed(2)}`;
+      document.getElementById('summary-shipping').textContent = shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`;
+      document.getElementById('summary-shipping').className = shipping === 0 ? 'free-ship' : '';
+      document.getElementById('summary-tax').textContent = `$${tax.toFixed(2)}`;
+      document.getElementById('summary-total').textContent = `$${total.toFixed(2)}`;
+    }
+
+    function updateCartQty(id, newQty) {
+      if (newQty < 1) { Cart.remove(id); } else { Cart.updateQty(id, newQty); }
+      renderCart();
+    }
+
+    function removeCartItem(id) {
+      const el = document.getElementById(`cart-item-${id}`);
+      if (el) {
+        el.style.transition = 'opacity .3s, transform .3s';
+        el.style.opacity = '0';
+        el.style.transform = 'translateX(20px)';
+        setTimeout(() => { Cart.remove(id); renderCart(); }, 300);
+      } else {
+        Cart.remove(id);
+        renderCart();
+      }
+    }
+
+    // Promo code
+    document.getElementById('promo-btn').addEventListener('click', () => {
+      const input = document.getElementById('promo-input');
+      const btn = document.getElementById('promo-btn');
+      if (input.value.trim().toUpperCase() === 'AURA15') {
+        btn.textContent = '✓ Applied!';
+        btn.style.background = '#22c55e';
+        btn.style.color = '#fff';
+      } else {
+        btn.textContent = 'Invalid';
+        btn.style.background = '#DC2626';
+        btn.style.color = '#fff';
+      }
+      setTimeout(() => { btn.textContent = 'Apply'; btn.style.background = ''; btn.style.color = ''; }, 2500);
+    });
+
+    // Checkout button
+    document.getElementById('checkout-btn').addEventListener('click', () => {
+      const items = Cart.get();
+      if (items.length === 0) return;
+
+      const subtotal = Cart.total();
+      const shipping = subtotal >= 75 ? 0 : 8;
+      const tax = Math.round(subtotal * 0.08 * 100) / 100;
+      const total = subtotal + shipping + tax;
+
+      // Place the order
+      const order = Orders.place(items, total);
+      
+      // Clear the cart
+      Cart.clear();
+
+      // Show success and redirect
+      const btn = document.getElementById('checkout-btn');
+      btn.innerHTML = '✓ Order Placed!';
+      btn.style.background = '#22c55e';
+      
+      setTimeout(() => {
+        window.location.href = 'account.html?section=orders';
+      }, 1500);
+    });
+
+    renderCart();
+  </script>
+</body>
+</html>

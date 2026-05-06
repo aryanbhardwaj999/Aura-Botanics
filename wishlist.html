@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Wishlist — Aura Botanics</title>
+  <meta name="description" content="Manage your saved Aura Botanics products." />
+  <meta name="theme-color" content="#FDFCF8" />
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link rel="stylesheet" href="index.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>" />
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <main id="main-content">
+    <section class="wishlist-hero animate-in">
+      <div class="container">
+        <p class="section-eyebrow">Your Favorites</p>
+        <h1 class="section-title">Wishlist</h1>
+      </div>
+    </section>
+
+    <section class="wishlist-section container">
+      <div id="wishlist-container">
+        <!-- Wishlist items will be rendered here -->
+      </div>
+      
+      <div id="wishlist-empty" style="display:none; text-align:center; padding:80px 0;">
+        <div style="font-size:64px; margin-bottom:24px; opacity:0.3;">♡</div>
+        <h2 style="font-family:var(--ff-heading); font-size:28px; margin-bottom:16px;">Your wishlist is empty</h2>
+        <p style="color:#666; margin-bottom:32px;">Save the items you love to keep track of them.</p>
+        <a href="shop.html" class="btn-primary" style="display:inline-block; width:auto; padding:14px 40px;">Explore Shop</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('site-nav').innerHTML = renderNav('wishlist');
+      document.getElementById('site-footer').innerHTML = renderFooter();
+      initMobileNav();
+      renderWishlistPage();
+    });
+
+    function renderWishlistPage() {
+      const wishlist = Wishlist.get();
+      const container = document.getElementById('wishlist-container');
+      const emptyMsg = document.getElementById('wishlist-empty');
+
+      if (wishlist.length === 0) {
+        container.style.display = 'none';
+        emptyMsg.style.display = 'block';
+        return;
+      }
+
+      container.style.display = 'grid';
+      container.className = 'product-grid'; // Use existing grid style
+      
+      const wishlistProducts = wishlist.map(id => PRODUCTS.find(p => p.id === id)).filter(Boolean);
+      container.innerHTML = wishlistProducts.map(renderProductCard).join('');
+    }
+
+    // Listen for wishlist changes to re-render
+    const originalToggle = Wishlist.toggle;
+    Wishlist.toggle = function(productId) {
+      originalToggle.call(Wishlist, productId);
+      renderWishlistPage();
+    };
+  </script>
+</body>
+</html>

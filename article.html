@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Article — Aura Botanics</title>
+  <meta name="theme-color" content="#FDFCF8" />
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link rel="stylesheet" href="index.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>" />
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <main id="main-content">
+    <div id="article-content">
+      <!-- Article will be rendered here via JS -->
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="app.js"></script>
+  <script>
+    // Render shared components
+    document.getElementById('site-nav').innerHTML = renderNav('blog');
+    document.getElementById('site-footer').innerHTML = renderFooter();
+    initMobileNav();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const blogId = urlParams.get('id');
+    const blog = BLOGS.find(b => b.id === blogId);
+    
+    const container = document.getElementById('article-content');
+
+    if (!blog) {
+      container.innerHTML = `
+        <section class="container" style="text-align:center; padding: 100px 0;">
+          <h2>Article Not Found</h2>
+          <p>The article you're looking for doesn't exist or has been moved.</p>
+          <a href="blog.html" class="btn-primary" style="display:inline-block; margin-top: 20px;">Return to Journal</a>
+        </section>
+      `;
+    } else {
+      document.title = `${blog.title} — Aura Botanics`;
+      
+      container.innerHTML = `
+        <article class="article-page animate-in">
+          <div class="article-header" style="max-width:800px; margin: 0 auto; text-align:center; padding: 60px 24px 40px;">
+            <div class="breadcrumb" style="justify-content:center; margin-bottom: 16px;">
+              <a href="blog.html">Journal</a> &nbsp;/&nbsp; <span>${blog.category}</span>
+            </div>
+            <h1 style="font-family:var(--ff-heading); font-size:clamp(32px, 5vw, 48px); line-height: 1.2; margin-bottom: 24px;">${blog.title}</h1>
+            <p style="color:#666; font-size:14px;">Published on ${blog.date}</p>
+          </div>
+          
+          <div class="article-hero-img" style="max-width:1000px; margin: 0 auto 40px; padding: 0 24px;">
+            <img src="${blog.image}" alt="${blog.title}" style="width:100%; height:auto; max-height: 500px; object-fit:cover; border-radius: var(--radius-md);" />
+          </div>
+          
+          <div class="article-body" style="max-width:680px; margin: 0 auto; padding: 0 24px 80px;">
+            <div class="article-text" style="font-size: 16px; line-height: 1.8; color: #444;">
+              ${blog.content}
+            </div>
+            
+            <div class="article-actions" style="margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border-light); display:flex; align-items:center; justify-content: space-between; flex-wrap:wrap; gap: 24px;">
+              <div style="display:flex; align-items:center; gap: 12px;">
+                ${window.SOCIAL_LINKS_HTML}
+              </div>
+              <div style="display:flex; align-items:center; gap: 16px;">
+                <span style="font-size: 13px; color: #888;">Share:</span>
+                <button style="background:none; border:none; font-size: 18px; cursor:pointer;" onclick="navigator.clipboard.writeText(window.location.href); alert('Link copied to clipboard!')">🔗</button>
+              </div>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+  </script>
+</body>
+</html>

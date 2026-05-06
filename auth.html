@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — Aura Botanics</title>
+  <meta name="description" content="Sign in to your Aura Botanics account or create a new one." />
+  <meta name="theme-color" content="#FDFCF8" />
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link rel="stylesheet" href="index.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>" />
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <main id="main-content">
+    <section class="auth-page">
+      <div class="auth-wrapper">
+        <!-- Left: Visual panel -->
+        <div class="auth-visual">
+          <div class="auth-visual-content">
+            <div class="auth-visual-logo">aura<span>.</span></div>
+            <h2>Welcome to a new era of skincare</h2>
+            <p>Join 50,000+ people who've transformed their skin with clinical-grade luxury botanicals.</p>
+            <div class="auth-visual-badges">
+              <span>🌿 Vegan</span>
+              <span>🔬 Clinically Proven</span>
+              <span>🛡️ 60-Day Guarantee</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Form panel -->
+        <div class="auth-form-panel">
+          <div class="auth-form-inner">
+            <!-- Tab switcher -->
+            <div class="auth-tabs">
+              <button class="auth-tab active" id="tab-login" data-tab="login">Sign In</button>
+              <button class="auth-tab" id="tab-signup" data-tab="signup">Create Account</button>
+            </div>
+
+            <!-- Login Form -->
+            <form class="auth-form" id="login-form">
+              <div class="form-group">
+                <label for="login-email">Email Address</label>
+                <input type="email" id="login-email" placeholder="you@example.com" required autocomplete="email" />
+              </div>
+              <div class="form-group">
+                <label for="login-password">Password</label>
+                <div class="password-wrap">
+                  <input type="password" id="login-password" placeholder="Enter your password" required autocomplete="current-password" minlength="6" />
+                  <button type="button" class="toggle-pw" aria-label="Toggle password visibility">👁</button>
+                </div>
+              </div>
+              <div class="form-row">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="remember-me" /> Remember me
+                </label>
+                <a href="#" class="forgot-link">Forgot password?</a>
+              </div>
+              <button type="submit" class="btn-primary auth-submit">
+                Sign In <span class="arrow">→</span>
+              </button>
+              <div class="auth-error" id="login-error"></div>
+            </form>
+
+            <!-- Signup Form -->
+            <form class="auth-form" id="signup-form" style="display:none">
+              <div class="form-row-2col">
+                <div class="form-group">
+                  <label for="signup-first">First Name</label>
+                  <input type="text" id="signup-first" placeholder="Jane" required autocomplete="given-name" />
+                </div>
+                <div class="form-group">
+                  <label for="signup-last">Last Name</label>
+                  <input type="text" id="signup-last" placeholder="Doe" required autocomplete="family-name" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="signup-email">Email Address</label>
+                <input type="email" id="signup-email" placeholder="you@example.com" required autocomplete="email" />
+              </div>
+              <div class="form-group">
+                <label for="signup-password">Password</label>
+                <div class="password-wrap">
+                  <input type="password" id="signup-password" placeholder="Min. 6 characters" required autocomplete="new-password" minlength="6" />
+                  <button type="button" class="toggle-pw" aria-label="Toggle password visibility">👁</button>
+                </div>
+                <div class="pw-strength" id="pw-strength"></div>
+              </div>
+              <div class="form-group">
+                <label for="signup-confirm">Confirm Password</label>
+                <div class="password-wrap">
+                  <input type="password" id="signup-confirm" placeholder="Repeat your password" required autocomplete="new-password" minlength="6" />
+                  <button type="button" class="toggle-pw" aria-label="Toggle password visibility">👁</button>
+                </div>
+              </div>
+              <label class="checkbox-label" style="margin-bottom:20px">
+                <input type="checkbox" id="agree-terms" required />
+                I agree to the <a href="#" style="color:var(--gold)">Terms of Service</a> and <a href="#" style="color:var(--gold)">Privacy Policy</a>
+              </label>
+              <button type="submit" class="btn-primary auth-submit">
+                Create Account <span class="arrow">→</span>
+              </button>
+              <div class="auth-error" id="signup-error"></div>
+            </form>
+
+            <!-- Divider -->
+            <div class="auth-divider"><span>or continue with</span></div>
+
+            <!-- Social buttons -->
+            <div class="social-auth">
+              <button class="social-btn" id="btn-google">
+                <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                Google
+              </button>
+              <button class="social-btn" id="btn-apple">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+                Apple
+              </button>
+            </div>
+
+            <p class="auth-footer-text" id="auth-switch-text">
+              Don't have an account? <a href="#" id="switch-to-signup">Create one</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="app.js"></script>
+  <script>
+    document.getElementById('site-nav').innerHTML = renderNav('auth');
+    document.getElementById('site-footer').innerHTML = renderFooter();
+    initMobileNav();
+
+    // If already logged in, redirect
+    if (Auth.isLoggedIn()) {
+      window.location.href = 'account.html';
+    }
+
+    // Tab switching
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+    const tabLogin = document.getElementById('tab-login');
+    const tabSignup = document.getElementById('tab-signup');
+    const switchText = document.getElementById('auth-switch-text');
+
+    function showTab(tab) {
+      if (tab === 'login') {
+        loginForm.style.display = 'block';
+        signupForm.style.display = 'none';
+        tabLogin.classList.add('active');
+        tabSignup.classList.remove('active');
+        switchText.innerHTML = 'Don\'t have an account? <a href="#" id="switch-to-signup">Create one</a>';
+        document.getElementById('switch-to-signup').addEventListener('click', e => { e.preventDefault(); showTab('signup'); });
+      } else {
+        loginForm.style.display = 'none';
+        signupForm.style.display = 'block';
+        tabSignup.classList.add('active');
+        tabLogin.classList.remove('active');
+        switchText.innerHTML = 'Already have an account? <a href="#" id="switch-to-login">Sign in</a>';
+        document.getElementById('switch-to-login').addEventListener('click', e => { e.preventDefault(); showTab('login'); });
+      }
+    }
+
+    tabLogin.addEventListener('click', () => showTab('login'));
+    tabSignup.addEventListener('click', () => showTab('signup'));
+    document.getElementById('switch-to-signup')?.addEventListener('click', e => { e.preventDefault(); showTab('signup'); });
+
+    // URL param check
+    if (new URLSearchParams(window.location.search).get('tab') === 'signup') showTab('signup');
+
+    // Toggle password visibility
+    document.querySelectorAll('.toggle-pw').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const input = btn.previousElementSibling;
+        const isPw = input.type === 'password';
+        input.type = isPw ? 'text' : 'password';
+        btn.textContent = isPw ? '🙈' : '👁';
+      });
+    });
+
+    // Password strength meter
+    document.getElementById('signup-password').addEventListener('input', e => {
+      const val = e.target.value;
+      const bar = document.getElementById('pw-strength');
+      let strength = 0;
+      if (val.length >= 6) strength++;
+      if (val.length >= 10) strength++;
+      if (/[A-Z]/.test(val)) strength++;
+      if (/[0-9]/.test(val)) strength++;
+      if (/[^A-Za-z0-9]/.test(val)) strength++;
+      const labels = ['', 'Weak', 'Fair', 'Good', 'Strong', 'Excellent'];
+      const colors = ['', '#DC2626', '#f59e0b', '#D4AF37', '#22c55e', '#16a34a'];
+      const pct = (strength / 5) * 100;
+      bar.innerHTML = val.length > 0 ? `<div class="pw-bar"><div class="pw-fill" style="width:${pct}%;background:${colors[strength]}"></div></div><span style="color:${colors[strength]}">${labels[strength]}</span>` : '';
+    });
+
+    // Login
+    loginForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+      const errorEl = document.getElementById('login-error');
+
+      const result = Auth.login(email, password);
+      if (result.success) {
+        errorEl.innerHTML = '<span style="color:#22c55e">✓ Login successful! Redirecting...</span>';
+        setTimeout(() => window.location.href = 'account.html', 800);
+      } else {
+        errorEl.innerHTML = `<span style="color:var(--urgency)">✗ ${result.message}</span>`;
+      }
+    });
+
+    // Signup
+    signupForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const first = document.getElementById('signup-first').value.trim();
+      const last = document.getElementById('signup-last').value.trim();
+      const email = document.getElementById('signup-email').value.trim();
+      const password = document.getElementById('signup-password').value;
+      const confirm = document.getElementById('signup-confirm').value;
+      const errorEl = document.getElementById('signup-error');
+
+      if (password !== confirm) {
+        errorEl.innerHTML = '<span style="color:var(--urgency)">✗ Passwords do not match</span>';
+        return;
+      }
+
+      const result = Auth.signup({ firstName: first, lastName: last, email, password });
+      if (result.success) {
+        errorEl.innerHTML = '<span style="color:#22c55e">✓ Account created! Redirecting...</span>';
+        setTimeout(() => window.location.href = 'account.html', 800);
+      } else {
+        errorEl.innerHTML = `<span style="color:var(--urgency)">✗ ${result.message}</span>`;
+      }
+    });
+
+    // Social auth (demo)
+    document.getElementById('btn-google').addEventListener('click', () => {
+      Auth.signup({ firstName: 'Google', lastName: 'User', email: 'user@gmail.com', password: 'google123' });
+      Auth.login('user@gmail.com', 'google123');
+      window.location.href = 'account.html';
+    });
+    document.getElementById('btn-apple').addEventListener('click', () => {
+      Auth.signup({ firstName: 'Apple', lastName: 'User', email: 'user@icloud.com', password: 'apple123' });
+      Auth.login('user@icloud.com', 'apple123');
+      window.location.href = 'account.html';
+    });
+  </script>
+</body>
+</html>

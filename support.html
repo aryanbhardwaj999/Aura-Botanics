@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Support — Aura Botanics</title>
+  <link rel="stylesheet" href="index.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>" />
+  <style>
+    .support-card {
+      background: #fff;
+      padding: 40px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-light);
+      transition: transform 0.3s ease;
+    }
+    .support-card:hover { transform: translateY(-5px); }
+    .faq-item {
+      border-bottom: 1px solid var(--border-light);
+      padding: 20px 0;
+    }
+    .faq-question {
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq-answer {
+      margin-top: 12px;
+      color: #666;
+      line-height: 1.6;
+      display: none;
+    }
+    .faq-item.active .faq-answer { display: block; }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <main>
+    <!-- HERO -->
+    <section style="background: var(--cream); padding: 100px 0 60px; text-align: center;">
+      <div class="container animate-in">
+        <h1 style="font-family: var(--ff-heading); font-size: 48px; margin-bottom: 16px;">How can we help?</h1>
+        <p style="color: #666; max-width: 600px; margin: 0 auto;">Whether you have a question about a product, shipping, or returns, our team is here to support you.</p>
+      </div>
+    </section>
+
+    <!-- SUPPORT CATEGORIES -->
+    <section style="padding: 80px 0;">
+      <div class="container">
+        <div class="footer-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px;">
+          
+          <!-- CONTACT US -->
+          <div id="contact-us" class="support-card animate-in">
+            <h3 style="margin-bottom: 20px;">Contact Us</h3>
+            <p style="font-size: 14px; color: #666; margin-bottom: 24px;">Send us a message and we'll get back to you within 24 hours.</p>
+            <form onsubmit="alert('Message Sent! Our support team will contact you shortly.'); return false;">
+              <input type="text" placeholder="Your Name" style="width:100%; padding:12px; margin-bottom:12px; border:1px solid #ddd; border-radius:4px;" required />
+              <input type="email" placeholder="Email Address" style="width:100%; padding:12px; margin-bottom:12px; border:1px solid #ddd; border-radius:4px;" required />
+              <textarea placeholder="How can we help?" style="width:100%; padding:12px; height:100px; margin-bottom:16px; border:1px solid #ddd; border-radius:4px;" required></textarea>
+              <button class="btn-primary" style="width:100%;">Send Message</button>
+            </form>
+          </div>
+
+          <!-- TRACK ORDER -->
+          <div id="track-order" class="support-card animate-in">
+            <h3 style="margin-bottom: 20px;">Track Order</h3>
+            <p style="font-size: 14px; color: #666; margin-bottom: 24px;">Enter your order ID to see your current shipment status.</p>
+            <div style="display:flex; gap:10px; margin-bottom: 32px;">
+              <input type="text" id="track-id" placeholder="Order ID (e.g. #12345)" style="flex:1; padding:12px; border:1px solid #ddd; border-radius:4px;" />
+              <button class="btn-primary" onclick="const id = document.getElementById('track-id').value; if(id) alert('Order '+id+' is currently in transit to Jaipur, Rajasthan.');">Track</button>
+            </div>
+            <hr style="border:0; border-top:1px solid #eee; margin-bottom:24px;"/>
+            <h4>Direct Support</h4>
+            <p style="font-size: 14px; color: #666; margin-top: 12px;">📞 +91 141 234 5678</p>
+            <p style="font-size: 14px; color: #666;">✉️ support@aurabotanics.com</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHIPPING & RETURNS -->
+    <section id="shipping-returns" style="padding: 80px 0; background: var(--cream);">
+      <div class="container">
+        <div class="footer-grid" style="grid-template-columns: 1fr 1fr; gap: 60px;">
+          <div class="animate-in">
+            <h2 style="font-family: var(--ff-heading); font-size: 32px; margin-bottom: 24px;">Shipping Policy</h2>
+            <ul style="line-height: 2; color: #444;">
+              <li><strong>Domestic (India):</strong> 3-5 business days. Free over ₹2,500.</li>
+              <li><strong>International:</strong> 7-14 business days via DHL Express.</li>
+              <li><strong>Processing:</strong> Orders placed before 12 PM IST ship same day.</li>
+            </ul>
+          </div>
+          <div class="animate-in">
+            <h2 style="font-family: var(--ff-heading); font-size: 32px; margin-bottom: 24px;">Returns & Exchanges</h2>
+            <p style="line-height: 1.8; color: #444; margin-bottom: 20px;">
+              We want you to love your skin. If a product isn't working for you, we offer a 30-day "Skin Satisfaction" guarantee.
+            </p>
+            <ul style="line-height: 2; color: #444;">
+              <li>Unopened products: Full refund within 30 days.</li>
+              <li>Opened products: Store credit or exchange.</li>
+              <li>Return shipping: Provided by us for domestic exchanges.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" style="padding: 100px 0;">
+      <div class="container animate-in">
+        <h2 style="font-family: var(--ff-heading); font-size: 36px; text-align: center; margin-bottom: 60px;">Frequently Asked Questions</h2>
+        <div style="max-width: 800px; margin: 0 auto;">
+          <div class="faq-item" onclick="this.classList.toggle('active')">
+            <div class="faq-question">Are your products safe for sensitive skin? <span>+</span></div>
+            <div class="faq-answer">Yes, all our products are dermatologist-tested and formulated without synthetic fragrances or harsh sulfates. We recommend our Bakuchiol range specifically for sensitive skin.</div>
+          </div>
+          <div class="faq-item" onclick="this.classList.toggle('active')">
+            <div class="faq-question">Where are your products manufactured? <span>+</span></div>
+            <div class="faq-answer">All Aura Botanics products are formulated and manufactured in small batches in our Jaipur, Rajasthan facility to ensure freshness and potency.</div>
+          </div>
+          <div class="faq-item" onclick="this.classList.toggle('active')">
+            <div class="faq-question">Are your products vegan and cruelty-free? <span>+</span></div>
+            <div class="faq-answer">Absolutely. We are PETA-certified cruelty-free and 100% of our formulas are vegan. We do not use honey, beeswax, or any animal-derived ingredients.</div>
+          </div>
+          <div class="faq-item" onclick="this.classList.toggle('active')">
+            <div class="faq-question">How should I store my serums? <span>+</span></div>
+            <div class="faq-answer">To maintain maximum potency of the Vitamin C and botanical oils, we recommend storing them in a cool, dark place away from direct sunlight. Refrigeration is optional but can feel great during application!</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="app.js"></script>
+  <script>
+    document.getElementById('site-nav').innerHTML = renderNav('support');
+    document.getElementById('site-footer').innerHTML = renderFooter();
+    initMobileNav();
+
+    // Intersection observer for animations
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.animate-in').forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>

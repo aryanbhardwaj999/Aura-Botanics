@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop All Products — Aura Botanics</title>
+  <meta name="description" content="Browse our complete collection of clinical-grade luxury skincare. Serums, moisturizers, cleansers, and more." />
+  <meta name="theme-color" content="#FDFCF8" />
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link rel="stylesheet" href="index.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>" />
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <main id="main-content">
+    <!-- Shop Hero -->
+    <section class="shop-hero animate-in">
+      <div class="container">
+        <p class="section-eyebrow">The Collection</p>
+        <h1 class="section-title" style="font-size:clamp(32px,5vw,56px);">Shop All Products</h1>
+        <p style="max-width:560px;margin:16px auto 0;color:#666;font-size:17px;text-align:center;">
+          Clinically proven formulas crafted with rare botanicals. Every product comes with a 60-day money-back guarantee.
+        </p>
+      </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="shop-filters">
+      <div class="container">
+        <div class="filter-bar">
+          <div class="filter-tabs" id="filter-tabs">
+            <button class="filter-tab active" data-cat="all">All</button>
+            <button class="filter-tab" data-cat="Serums">Serums</button>
+            <button class="filter-tab" data-cat="Moisturizers">Moisturizers</button>
+            <button class="filter-tab" data-cat="Cleansers">Cleansers</button>
+            <button class="filter-tab" data-cat="Eye Care">Eye Care</button>
+            <button class="filter-tab" data-cat="Masks">Masks</button>
+            <button class="filter-tab" data-cat="Toners">Toners</button>
+            <button class="filter-tab" data-cat="Oils">Oils</button>
+          </div>
+          <div class="filter-sort">
+            <select id="sort-select" aria-label="Sort products">
+              <option value="featured">Featured</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="rating">Highest Rated</option>
+              <option value="reviews">Most Reviewed</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Grid -->
+    <section class="shop-grid-section">
+      <div class="container">
+        <p class="results-count" id="results-count"></p>
+        <div class="product-grid" id="product-grid"></div>
+      </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter animate-in">
+      <div class="container">
+        <div class="newsletter-card">
+          <h2>Get 15% Off Your First Order</h2>
+          <p>Join 50,000+ skincare lovers. Receive exclusive offers, new product alerts, and expert skincare tips.</p>
+          <form class="newsletter-form" id="newsletter-form">
+            <input type="email" placeholder="Enter your email" required aria-label="Email address" />
+            <button type="submit">Subscribe</button>
+          </form>
+          <span class="newsletter-note">No spam, unsubscribe anytime. By subscribing you agree to our Privacy Policy.</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="app.js"></script>
+  <script>
+    // Render shared components
+    document.getElementById('site-nav').innerHTML = renderNav('shop');
+    document.getElementById('site-footer').innerHTML = renderFooter();
+    initMobileNav();
+
+    // State
+    let currentCat = 'all';
+    let currentSort = 'featured';
+
+    function filterAndRender() {
+      let filtered = currentCat === 'all' ? [...PRODUCTS] : PRODUCTS.filter(p => p.category === currentCat);
+
+      switch (currentSort) {
+        case 'price-low': filtered.sort((a, b) => a.price - b.price); break;
+        case 'price-high': filtered.sort((a, b) => b.price - a.price); break;
+        case 'rating': filtered.sort((a, b) => b.rating - a.rating); break;
+        case 'reviews': filtered.sort((a, b) => b.reviews - a.reviews); break;
+      }
+
+      document.getElementById('results-count').textContent = `${filtered.length} product${filtered.length !== 1 ? 's' : ''}`;
+      document.getElementById('product-grid').innerHTML = filtered.map(renderProductCard).join('');
+    }
+
+    // Filter tabs
+    document.getElementById('filter-tabs').addEventListener('click', e => {
+      const tab = e.target.closest('.filter-tab');
+      if (!tab) return;
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentCat = tab.dataset.cat;
+      filterAndRender();
+    });
+
+    // Sort
+    document.getElementById('sort-select').addEventListener('change', e => {
+      currentSort = e.target.value;
+      filterAndRender();
+    });
+
+    // Newsletter
+    document.getElementById('newsletter-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const input = e.target.querySelector('input');
+      input.value = '';
+      const btn = e.target.querySelector('button');
+      btn.textContent = '✓ Subscribed!';
+      btn.style.background = '#22c55e';
+      setTimeout(() => { btn.textContent = 'Subscribe'; btn.style.background = ''; }, 3000);
+    });
+
+    filterAndRender();
+  </script>
+</body>
+</html>
