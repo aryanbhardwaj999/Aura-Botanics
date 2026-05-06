@@ -129,6 +129,7 @@
 
   <script type="module" src="app.js"></script>
   <script>
+  document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('site-nav').innerHTML = renderNav('events');
     document.getElementById('site-footer').innerHTML = renderFooter();
     initMobileNav();
@@ -138,6 +139,7 @@
       entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.1 });
     document.querySelectorAll('.animate-in').forEach(el => obs.observe(el));
+  });
   </script>
 </body>
 </html>

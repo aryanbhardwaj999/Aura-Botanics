@@ -1080,4 +1080,12 @@ window.Orders = Orders;
 window.PRODUCTS = PRODUCTS;
 window.BLOGS = BLOGS;
 window.initPage = initPage;
+window.getProductById = getProductById;
+window.renderStars = renderStars;
+window.renderProductCard = renderProductCard;
+window.openHelpModal = openHelpModal;
+window.closeHelpModal = closeHelpModal;
+window.showHelpForm = showHelpForm;
+window.hideHelpForm = hideHelpForm;
+window.submitHelpQuery = submitHelpQuery;
 

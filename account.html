@@ -161,6 +161,7 @@
 
   <script type="module" src="app.js"></script>
   <script>
+  document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('site-nav').innerHTML = renderNav('account');
     document.getElementById('site-footer').innerHTML = renderFooter();
     initMobileNav();
@@ -334,6 +335,7 @@
 
     renderAddresses();
     renderOrders();
+  });
   </script>
 </body>
 </html>

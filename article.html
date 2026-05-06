@@ -23,6 +23,7 @@
 
   <script type="module" src="app.js"></script>
   <script>
+  document.addEventListener('DOMContentLoaded', () => {
     // Render shared components
     document.getElementById('site-nav').innerHTML = renderNav('blog');
     document.getElementById('site-footer').innerHTML = renderFooter();
@@ -77,6 +78,7 @@
         </article>
       `;
     }
+  });
   </script>
 </body>
 </html>

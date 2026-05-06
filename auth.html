@@ -135,6 +135,10 @@
   <script type="module" src="app.js"></script>
 
   <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+
     // Tab switching
     document.querySelectorAll('.auth-tab').forEach(tab => {
       tab.addEventListener('click', () => {
@@ -227,6 +231,7 @@
       Auth.login('user@icloud.com', 'apple123');
       window.location.href = 'account.html';
     });
+  });
   </script>
 </body>
 </html>
