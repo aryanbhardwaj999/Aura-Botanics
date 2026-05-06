@@ -94,7 +94,7 @@
       <div class="container">
         <h2 style="font-family: var(--ff-heading); font-size: 32px; margin-bottom: 48px; text-align: center;">Upcoming Events</h2>
         <div style="max-width: 800px; margin: 0 auto; display:flex; flex-direction:column; gap:20px;">
-          <div class="animate-in" style="display:flex; background:#fff; border-radius:12px; overflow:hidden; align-items:center;">
+          <div class="animate-in event-card" data-event="Mastering the Glow: Workshop" data-date="15 May" data-location="Aura Flagship, Jaipur" style="display:flex; background:#fff; border-radius:12px; overflow:hidden; align-items:center;">
             <div style="background:var(--gold); color:#fff; padding:30px; text-align:center; min-width:120px;">
               <div style="font-size:24px; font-weight:700;">15</div>
               <div style="font-size:14px; text-transform:uppercase;">MAY</div>
@@ -104,10 +104,10 @@
               <p style="font-size:14px; color:#666;">Aura Flagship, Jaipur • 4:00 PM</p>
             </div>
             <div style="padding:24px;">
-              <button class="btn-primary" style="padding:10px 20px;">RSVP</button>
+              <button class="btn-primary event-register-btn" style="padding:10px 20px;">RSVP</button>
             </div>
           </div>
-          <div class="animate-in" style="display:flex; background:#fff; border-radius:12px; overflow:hidden; align-items:center;">
+          <div class="animate-in event-card" data-event="Sustainable Beauty Summit" data-date="28 May" data-location="Virtual Event" style="display:flex; background:#fff; border-radius:12px; overflow:hidden; align-items:center;">
             <div style="background:var(--charcoal); color:#fff; padding:30px; text-align:center; min-width:120px;">
               <div style="font-size:24px; font-weight:700;">28</div>
               <div style="font-size:14px; text-transform:uppercase;">MAY</div>
@@ -117,7 +117,7 @@
               <p style="font-size:14px; color:#666;">Virtual Event • 6:30 PM IST</p>
             </div>
             <div style="padding:24px;">
-              <button class="btn-primary" style="padding:10px 20px;">Register</button>
+              <button class="btn-primary event-register-btn" style="padding:10px 20px;">Register</button>
             </div>
           </div>
         </div>
@@ -127,12 +127,92 @@
 
   <div id="site-footer"></div>
 
+  <!-- Event Registration Modal -->
+  <div id="event-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center; padding:24px;">
+    <div style="background:#fff; border-radius:16px; padding:32px; width:100%; max-width:420px; box-shadow:0 20px 48px rgba(0,0,0,0.15); position:relative;">
+      <button onclick="closeEventModal()" style="position:absolute; top:16px; right:16px; background:none; border:none; font-size:20px; cursor:pointer; color:#888;">✕</button>
+      <h3 style="font-family:var(--ff-heading); font-size:22px; margin-bottom:8px;">Event Registration</h3>
+      <p id="event-modal-subtitle" style="color:#666; font-size:14px; margin-bottom:20px;"></p>
+      <form id="event-form" onsubmit="submitEventRegistration(event)">
+        <div style="margin-bottom:14px;">
+          <label style="display:block; font-size:13px; font-weight:600; margin-bottom:6px;">Full Name</label>
+          <input type="text" id="event-name" required style="width:100%; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px;" />
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="display:block; font-size:13px; font-weight:600; margin-bottom:6px;">Email</label>
+          <input type="email" id="event-email" required style="width:100%; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px;" />
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="display:block; font-size:13px; font-weight:600; margin-bottom:6px;">Phone</label>
+          <input type="tel" id="event-phone" required style="width:100%; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px;" />
+        </div>
+        <input type="hidden" id="event-hidden-name" />
+        <button type="submit" class="btn-primary" style="width:100%;">Confirm Registration</button>
+      </form>
+      <div id="event-success" style="display:none; text-align:center; padding:20px 0;">
+        <div style="font-size:40px; margin-bottom:12px;">✓</div>
+        <strong style="font-size:18px; color:var(--charcoal);">Registered Successfully!</strong>
+        <p style="font-size:14px; color:#666; margin-top:8px;">We'll send details to your email.</p>
+        <button onclick="closeEventModal()" class="btn-primary" style="margin-top:16px; width:auto; padding:10px 24px;">Close</button>
+      </div>
+    </div>
+  </div>
+
   <script type="module" src="app.js"></script>
   <script>
+  let currentEventName = '';
+
+  function openEventModal(eventName, eventDate, eventLocation) {
+    currentEventName = eventName;
+    document.getElementById('event-modal-subtitle').textContent = eventName + ' • ' + eventDate + ' • ' + eventLocation;
+    document.getElementById('event-hidden-name').value = eventName;
+    document.getElementById('event-form').style.display = 'block';
+    document.getElementById('event-success').style.display = 'none';
+    document.getElementById('event-modal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeEventModal() {
+    document.getElementById('event-modal').style.display = 'none';
+    document.body.style.overflow = '';
+    document.getElementById('event-form').reset();
+  }
+
+  function submitEventRegistration(e) {
+    e.preventDefault();
+    const name = document.getElementById('event-name').value.trim();
+    const email = document.getElementById('event-email').value.trim();
+    const phone = document.getElementById('event-phone').value.trim();
+    const eventName = document.getElementById('event-hidden-name').value;
+
+    const registrations = JSON.parse(localStorage.getItem('aura_event_regs') || '[]');
+    registrations.push({ name, email, phone, eventName, date: new Date().toISOString() });
+    localStorage.setItem('aura_event_regs', JSON.stringify(registrations));
+
+    document.getElementById('event-form').style.display = 'none';
+    document.getElementById('event-success').style.display = 'block';
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('site-nav').innerHTML = renderNav('events');
     document.getElementById('site-footer').innerHTML = renderFooter();
     initMobileNav();
+
+    // Event register buttons
+    document.querySelectorAll('.event-register-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('.event-card');
+        const eventName = card.dataset.event;
+        const eventDate = card.dataset.date;
+        const eventLocation = card.dataset.location;
+        openEventModal(eventName, eventDate, eventLocation);
+      });
+    });
+
+    // Close modal on overlay click
+    document.getElementById('event-modal').addEventListener('click', e => {
+      if (e.target === document.getElementById('event-modal')) closeEventModal();
+    });
 
     // Intersection observer for animations
     const obs = new IntersectionObserver((entries) => {
