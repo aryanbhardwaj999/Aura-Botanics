@@ -840,117 +840,8 @@ window.submitHelpQuery = function(e) {
   }, 3000);
 };
 
-// ─── Page Initialization ─────────────────────────────────────
-function initPage() {
-  const path = window.location.pathname;
-  const isHome = path === '/' || path.endsWith('index.html');
-  const isShop = path.includes('shop.html');
-  const isProduct = path.includes('product.html');
-  const isBlog = path.includes('blog.html');
-  const isAuth = path.includes('auth.html');
-  const isAccount = path.includes('account.html');
-  const isCart = path.includes('cart.html');
-  const isWishlist = path.includes('wishlist.html');
 
-  // Common UI
-  const navContainer = document.getElementById('site-nav');
-  const footerContainer = document.getElementById('site-footer');
-  
-  if (navContainer) {
-    const active = isHome ? 'home' : isShop ? 'shop' : isBlog ? 'blog' : isAuth ? 'auth' : '';
-    navContainer.innerHTML = renderNav(active);
-    initMobileNav();
-  }
-  
-  if (footerContainer) {
-    footerContainer.innerHTML = renderFooter();
-  }
 
-  // Page Specifics
-  if (isShop) initShop();
-  if (isProduct) initProduct();
-  if (isBlog) initBlog();
-  if (isAuth) initAuth();
-  if (isAccount) initAccount();
-  if (isCart) initCart();
-  if (isWishlist) initWishlist();
-}
-
-function initShop() {
-  const container = document.getElementById('shop-grid');
-  if (!container) return;
-  
-  const render = (items) => {
-    container.innerHTML = items.length ? items.map(p => renderProductCard(p)).join('') : '<p class="no-results">No products found.</p>';
-    // Re-trigger observer for new cards
-    document.querySelectorAll('.product-card').forEach(c => {
-      c.style.opacity = '1';
-      c.style.transform = 'none';
-    });
-  };
-
-  render(PRODUCTS);
-
-  // Filters
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const cat = btn.dataset.category;
-      render(cat === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.category === cat));
-    });
-  });
-}
-
-function initProduct() {
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get('id');
-  const p = getProductById(id) || PRODUCTS[0];
-  
-  const container = document.getElementById('product-detail-container');
-  if (!container) return;
-
-  container.innerHTML = `
-    <div class="product-detail-grid">
-      <div class="product-detail-visual">
-        <img src="${p.image}" alt="${p.name}" class="main-img" />
-      </div>
-      <div class="product-detail-info">
-        <p class="eyebrow">${p.category}</p>
-        <h1>${p.name}</h1>
-        <div class="rating-row">${renderStars(p.rating)} (${p.reviews} reviews)</div>
-        <div class="price-row"><span class="current">$${p.price}</span><span class="old">$${p.originalPrice}</span></div>
-        <p class="desc">${p.description}</p>
-        <button class="btn-primary" onclick="Cart.add('${p.id}')">Add to Cart</button>
-        <div class="extra-info">
-          <h3>How to use</h3>
-          <p>${p.howToUse}</p>
-          <h3>Key Ingredients</h3>
-          <p>${p.ingredients}</p>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function initBlog() {
-  const container = document.getElementById('blog-grid');
-  if (!container) return;
-  container.innerHTML = BLOGS.map(b => `
-    <article class="blog-card">
-      <img src="${b.image}" alt="${b.title}" />
-      <div class="blog-card-body">
-        <span class="cat">${b.category}</span>
-        <h3>${b.title}</h3>
-        <p>${b.excerpt}</p>
-        <a href="article.html?id=${b.id}" class="read-more">Read More →</a>
-      </div>
-    </article>
-  `).join('');
-}
-
-// Run everything on load
-document.addEventListener('DOMContentLoaded', initPage);
 
 // ─── Master Page Initialization ────────────────────────────────
 function initPage() {
@@ -1171,4 +1062,4 @@ window.Orders = Orders;
 window.PRODUCTS = PRODUCTS;
 window.BLOGS = BLOGS;
 window.initPage = initPage;
-window.initPage = initPage;
+
