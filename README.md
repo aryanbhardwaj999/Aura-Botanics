@@ -2,7 +2,7 @@
 
 A premium, luxury botanical e-commerce storefront designed for a sophisticated shopping experience. Built with performance and aesthetics in mind using modern web technologies.
 
-![Aura Botanics Banner](https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=2000&auto=format&fit=crop)
+![Aura Botanics Banner](https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=200&auto=format&fit=crop)
 
 ## ✨ Features
 
