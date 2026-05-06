@@ -4,6 +4,8 @@ A premium, luxury botanical e-commerce storefront designed for a sophisticated s
 
 ![Aura Botanics Banner](https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=2000&auto=format&fit=crop)
 
+
+
 ## ✨ Features
 
 - **Luxury Product Catalog**: Beautifully rendered product grids and detail pages.
