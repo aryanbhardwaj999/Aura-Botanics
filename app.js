@@ -1041,6 +1041,18 @@ function initAuth() {
   };
 }
 
+function initAccount() {
+  // Account page logic is handled inline in account.html
+}
+
+function initCart() {
+  // Cart page logic is handled inline in cart.html
+}
+
+function initWishlist() {
+  // Wishlist page logic is handled inline in wishlist.html
+}
+
 function initSupport() {
   // Support page logic (FAQ toggles, etc.)
   document.querySelectorAll('.faq-item').forEach(item => {

@@ -134,6 +134,18 @@
 
   <script type="module" src="app.js"></script>
 
+  <script>
+    // Tab switching
+    document.querySelectorAll('.auth-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const t = tab.dataset.tab;
+        if (t) showTab(t);
+      });
+    });
+    document.getElementById('switch-to-signup')?.addEventListener('click', e => {
+      e.preventDefault();
+      showTab('signup');
+    });
 
     // URL param check
     if (new URLSearchParams(window.location.search).get('tab') === 'signup') showTab('signup');
